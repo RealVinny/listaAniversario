@@ -1,18 +1,15 @@
-package com.app.functions;
+package com.app.backEnd.dabataseFunc;
+
+import com.app.backEnd.connectionFunc.ConnectarDatabase;
 
 import java.sql.*;
 import java.util.Scanner;
 
-public class AddObject {
+public class AddObject extends ConnectarDatabase {
     private String url;
     private String user;
     private String password;
 
-    public AddObject(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-    }
 
     public void addObject() throws SQLException {
 

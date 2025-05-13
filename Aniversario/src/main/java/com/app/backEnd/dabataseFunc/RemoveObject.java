@@ -1,18 +1,15 @@
-package com.app.functions;
+package com.app.backEnd.dabataseFunc;
+
+import com.app.backEnd.connectionFunc.ConnectarDatabase;
 
 import java.sql.*;
 import java.util.Scanner;
 
-public class RemoveObject {
-    private final String url;
-    private final String user;
-    private final String password;
+public class RemoveObject extends ConnectarDatabase {
+    private String url;
+    private  String user;
+    private  String password;
 
-    public RemoveObject(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-    }
 
     public void removeObject() throws SQLException{
 
