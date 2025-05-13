@@ -1,36 +1,62 @@
 package com.app.functions;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class RemoveObject {
-    String url;
+    private final String url;
+    private final String user;
+    private final String password;
 
+    public RemoveObject(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
 
-    public RemoveObject(String url) {
+    public void removeObject() throws SQLException{
 
-        try {
             Scanner sc = new Scanner(System.in);
-            Connection conn = DriverManager.getConnection(url);
+        try(Connection connection = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement pStmt = connection.prepareStatement("DELETE FROM convidados WHERE nome=?");
+            PreparedStatement cStmt = connection.prepareStatement("SELECT * FROM convidados WHERE nome =?");
 
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM convidados WHERE nome = ?");
-            System.out.println("informe o nome do convidado a remover:");
-            stmt.setString(1, sc.nextLine());
+            System.out.println("informe o convidado a ser deletado");
+            String convidado = sc.nextLine();
 
-            int quantDeletados = stmt.executeUpdate();
+            pStmt.setString(1, convidado);
+            cStmt.setString(1, convidado);
 
-            if(quantDeletados >0){
-                System.out.println("convidado deletado");
-            }else{
-                System.out.println("convidado não foi deletado corretamente !");
+            System.out.println("consultando informações");
+
+            ResultSet resultSet = cStmt.executeQuery();
+
+            while (resultSet.next()){
+                String nome = resultSet.getString("nome");
+                String local = resultSet.getString("local");
+                int idade = resultSet.getInt("idade");
+
+                System.out.println("nome :" + nome + "\nidade :" + idade + "\nlocal :" + local + "\n");
+
+                System.out.println("confirma esses dados ? (S/N)");
+                if(sc.nextLine().equalsIgnoreCase("S")){
+                    pStmt.executeUpdate();
+
+                    System.out.println("usuario deletado com sucesso !");
+                    break;
+                }else {
+                    System.out.println("operação cancelada");
+                    break;
+                }
+
             }
 
-
-        }catch (Exception e){
-            System.err.println(e);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
-}
+
+    }
 
 }
+
+

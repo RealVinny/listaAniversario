@@ -26,9 +26,21 @@ public class App
         String password = sc.nextLine();
 
 
-        try(Connection con = DriverManager.getConnection(url, user, password);){
+        try(Connection con = DriverManager.getConnection(url, user, password)){
+            AddObject addObject = new AddObject(url, user, password);
 
-            RemoveObject removeObject = new RemoveObject(url);
+            addObject.addObject();
+            System.out.println("deu certo");
+
+            SearchObject searchObject = new SearchObject(url, user, password);
+            searchObject.searchObject();
+            System.out.println("deu certo dnv");
+
+            RemoveObject removeObject = new RemoveObject(url, user, password);
+            removeObject.removeObject();
+            System.out.println("deu certo dnv+1");
+
+
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
