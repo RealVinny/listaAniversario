@@ -33,6 +33,8 @@ public class JanelaLogin extends JanelaPrincipal {
             String usuario = textField.getText();
             String senha = new String(passwordField.getPassword());
 
+            System.out.println( usuario + senha);
+
             try {
                 Connection conexao = ConnectarDatabase.connectar(usuario, senha);
 

@@ -10,7 +10,7 @@ public class ConnectarDatabase {
 
     public static Connection connectar (String user, String password) throws SQLException {
         Scanner sc = new Scanner(System.in);
-        String url = "jdbc:mysql://localhost:3305/listaDeAniversario";
+        String url = "jdbc:mysql://localhost:3306/listaDeAniversario";
 
         return DriverManager.getConnection(url, user, password);
     }
