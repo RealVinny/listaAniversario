@@ -1,7 +1,9 @@
 package com.app.backEnd.dabataseFunc;
 
 import com.app.backEnd.connectionFunc.ConnectarDatabase;
+import jdk.jshell.execution.JdiDefaultExecutionControl;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -10,47 +12,41 @@ public class RemoveObject extends ConnectarDatabase {
     private  String user;
     private  String password;
 
+    public RemoveObject(String user, String password) {
+        this.user = user;
+        this.password = password;
+    }
 
-    public void removeObject() throws SQLException{
+    public void removeObject(String userName) throws SQLException{
+        String url = "jdbc:mysql://localhost:3306/listaDeAniversario";
 
-            Scanner sc = new Scanner(System.in);
         try(Connection connection = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement pStmt = connection.prepareStatement("DELETE FROM convidados WHERE nome=?");
-            PreparedStatement cStmt = connection.prepareStatement("SELECT * FROM convidados WHERE nome =?");
 
-            System.out.println("informe o convidado a ser deletado");
-            String convidado = sc.nextLine();
+            SearchObject searchObject = new SearchObject(user, password);
 
-            pStmt.setString(1, convidado);
-            cStmt.setString(1, convidado);
+           if (userName == null){
+             JOptionPane.showMessageDialog(null, "Informe um nome para consultar !");
+           } else if (searchObject.searchObject(userName) != null) {
+               JOptionPane.showMessageDialog(null, searchObject.searchObject(userName));
+           }
 
-            System.out.println("consultando informações");
+            String confirmacao = JOptionPane.showInputDialog("confirma a consulta? (S/N)");
 
-            ResultSet resultSet = cStmt.executeQuery();
+            if(confirmacao.equalsIgnoreCase("S")){
 
-            while (resultSet.next()){
-                String nome = resultSet.getString("nome");
-                String local = resultSet.getString("local");
-                int idade = resultSet.getInt("idade");
-
-                System.out.println("nome :" + nome + "\nidade :" + idade + "\nlocal :" + local + "\n");
-
-                System.out.println("confirma esses dados ? (S/N)");
-                if(sc.nextLine().equalsIgnoreCase("S")){
+                    PreparedStatement pStmt = connection.prepareStatement("DELETE FROM convidados WHERE nome=?");
+                    pStmt.setString(1, userName);
                     pStmt.executeUpdate();
 
-                    System.out.println("usuario deletado com sucesso !");
-                    break;
-                }else {
-                    System.out.println("operação cancelada");
-                    break;
+                if(pStmt.executeUpdate() == 1){
+                    JOptionPane.showMessageDialog(null, "Usuario " + userName +" removido com sucesso!");
                 }
 
+                }else{
+                JOptionPane.showMessageDialog(null, "Operaçao cancelada");
             }
 
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+            }
 
     }
 
